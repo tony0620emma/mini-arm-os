@@ -3,6 +3,8 @@
 #include "reg.h"
 #include "threads.h"
 
+#define MAX_INPUT 50
+
 /* USART TXE Flag
  * This flag is cleared when data is written to USARTx_DR and
  * set when that data is transferred to the TDR
@@ -67,26 +69,32 @@ void shell(void *user)
 {
 	/* maximum buffer = 50 , though it's
 	 * a very dangerous setting, should fix it later */
-	char buffer[50];
+	char buffer[MAX_INPUT];
 	size_t index;
 	while (1) {
 		print_str("tonyyanxuan:~$ ");
 		index = 0;
 
 		while (1) {
+
 			buffer[index] = recv_char();
-			if (buffer[index] == 13) {
+
+			/* detect "enter" hit or a new line character */
+			if (buffer[index] == 13 || buffer[index] == '\n') {
 				print_char("\n");
 				index += 1;
 				break;
 			}
 			print_char(&buffer[index++]);
+
+			/* prevent index overflow */
+			if (index == MAX_INPUT)
+				index--;
 		}
 		print_str("your input is : ");
 		print_str(&buffer[0]);
 		print_str("\n");
 		clear_buffer(buffer, index);
-		break;
 	}
 }
 
