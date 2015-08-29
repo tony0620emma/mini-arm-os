@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "reg.h"
 #include "threads.h"
+#include "str.h"
 
 #define MAX_INPUT 50
 
@@ -65,10 +66,14 @@ void clear_buffer(char *buffer, size_t index)
 		buffer[i] = '\0';
 }
 
+void command_detect (const char *str, size_t index)
+{
+	if (!strncmp("help", str, 4))
+		print_str("This is a help command\n");
+}
+
 void shell(void *user)
 {
-	/* maximum buffer = 50 , though it's
-	 * a very dangerous setting, should fix it later */
 	char buffer[MAX_INPUT];
 	size_t index;
 	while (1) {
@@ -83,6 +88,7 @@ void shell(void *user)
 			if (buffer[index] == 13 || buffer[index] == '\n') {
 				print_char("\n");
 				index += 1;
+				command_detect(&buffer[0], index);
 				break;
 			}
 			print_char(&buffer[index++]);
@@ -91,9 +97,12 @@ void shell(void *user)
 			if (index == MAX_INPUT)
 				index--;
 		}
-		print_str("your input is : ");
-		print_str(&buffer[0]);
-		print_str("\n");
+
+		/* ---- debug ----
+		 * print_str("your input is : ");
+		 * print_str(&buffer[0]);
+		 * print_str("\n");
+		 */
 		clear_buffer(buffer, index);
 	}
 }
