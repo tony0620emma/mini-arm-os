@@ -1,3 +1,4 @@
+#include "str.h"
 
 /* return 1 if they are the same. 
  * otherwise, return 0, it should detect faster. */
@@ -13,7 +14,7 @@ int strncmp(const char *str1, const char *str2, size_t n)
 
 /* return 1 if they are the same. 
  * otherwise, return 0 */
-int strcmp(const char *str1; const char *str2)
+int strcmp(const char *str1, const char *str2)
 {
 	while (1) {
 		if (*str1 == '\0' || *str2 == '\0') {

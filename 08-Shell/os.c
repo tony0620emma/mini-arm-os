@@ -77,9 +77,9 @@ void command_detect (char *str, size_t index)
 	print_str(tok);
 	print_char("\n");
 
-	if (!strcmp("help", tok))
+	if (strcmp("help", tok))
 		print_str("This is a help command\n");
-	else if (!strncmp("fibonacci", str, index)) {
+	else if (strncmp("fibonacci", str, index)) {
 		print_str("Calculating fibonacci sequence ...\n");
 		if (thread_create_int(fibonacci, 15) == -1)
 			print_str("Failed to create fib thread...QQ\n");
