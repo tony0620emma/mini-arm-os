@@ -90,19 +90,26 @@ void shell(void *user)
 				index += 1;
 				command_detect(&buffer[0], index);
 				break;
+			} else if (buffer[index] == 8 || buffer[index] == 127) {
+				print_char("\b");
+				print_char(" ");
+				print_char("\b");
+				buffer[index--] = '\0';
+			} else  {
+				print_char(&buffer[index++]);
 			}
-			print_char(&buffer[index++]);
+
 
 			/* prevent index overflow */
 			if (index == MAX_INPUT)
 				index--;
 		}
 
-		/* ---- debug ----
-		 * print_str("your input is : ");
-		 * print_str(&buffer[0]);
-		 * print_str("\n");
-		 */
+		 /* ---- debug ----
+		  * print_str("your input is : ");
+		  * print_str(&buffer[0]);
+		  * print_str("\n"); */
+		 
 		clear_buffer(buffer, index);
 	}
 }
