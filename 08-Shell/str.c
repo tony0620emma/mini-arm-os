@@ -83,7 +83,7 @@ char *strtok(char *str,const char *delimiters)
 	/* reach the end of the string */
 	if (*str_ptr == '\0') return NULL;
 
-	/* find the end of the string */
+	/* find the end of the substring */
 	while (1) {
 		for (i = 0; i < len; i++) {
 			if (*str_ptr == delimiters[i]) {
