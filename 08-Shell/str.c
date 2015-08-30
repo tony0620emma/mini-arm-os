@@ -97,3 +97,7 @@ char *strtok(char *str,const char *delimiters)
 	}
 	return start;
 }
+
+void strtok_flush(void){
+	str_ptr = NULL;
+}

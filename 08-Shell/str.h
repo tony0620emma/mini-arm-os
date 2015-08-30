@@ -9,5 +9,6 @@ int strcmp(const char *, const char *);
 int strlen(const char *);
 int strncpy(char *, char *, size_t);
 char *strtok(char *,const char *);
+void strtok_flush(void);
 
 #endif

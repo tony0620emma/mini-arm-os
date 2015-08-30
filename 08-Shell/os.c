@@ -16,6 +16,7 @@
 #define USART_FLAG_RXNE ((uint16_t) 0x0020)
 
 int fibonacci(int number1);
+extern char *str_ptr;
 
 void usart_init(void)
 {
@@ -70,28 +71,19 @@ void clear_buffer(char *buffer, size_t index)
 
 void command_detect (char *str, size_t index)
 {
-	char cmd[index];
-	strncpy(str, cmd, index);	
-	print_str("command : ");
-	print_str(cmd);
-	print_str("\n");
-	char *tok = strtok(cmd, " ");
-	print_str("command : ");
-	print_str(cmd);
-	print_str("\n");
-	print_str("token : ");
-	print_str(tok);
-	print_char("\n");
+	char *tok = strtok(str, " ");
 
 	if (strcmp("help", tok))
 		print_str("This is a help command\n");
-	else if (strncmp("fibonacci", str, index)) {
+	else if (strcmp("fibonacci", str)) {
 		print_str("Calculating fibonacci sequence ...\n");
 		if (thread_create_int(fibonacci, 15) == -1)
 			print_str("Failed to create fib thread...QQ\n");
 		else
 			print_str("Create fibonacci sequence successfully!!\n");
 	}
+	/* we need to flush the token */
+	strtok_flush();
 }
 
 void shell(void *user)
