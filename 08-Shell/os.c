@@ -106,10 +106,12 @@ void shell(void *user)
 			} 
 			/* detect backspace or delete */
 			else if (buffer[index] == 8 || buffer[index] == 127) {
-				print_char("\b");
-				print_char(" ");
-				print_char("\b");
-				buffer[index--] = '\0';
+				if (index != 0) {
+					print_char("\b");
+					print_char(" ");
+					print_char("\b");
+					buffer[index--] = '\0';
+				}
 			} else  {
 				print_char(&buffer[index++]);
 			}
