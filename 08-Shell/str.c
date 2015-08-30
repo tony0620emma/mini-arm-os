@@ -92,8 +92,8 @@ char *strtok(char *str,const char *delimiters)
 				break;
 			}
 		}
-		if(i == len) str++;
-		break;
+		if(i < len) break;
+		str_ptr++;
 	}
 	return start;
 }
