@@ -26,7 +26,7 @@ int strcmp(const char *str1; const char *str2)
 }
 
 /* if we don't detect '\0' , it will be dangerous */
-int strlen(const char str)
+int strlen(const char *str)
 {
 	int i = 0;
 	while (*str++) 
@@ -34,18 +34,65 @@ int strlen(const char str)
 	return i;
 }
 
-char *strtok(const char *str, char delim) 
+int strncpy(char *src, char *dst, size_t n) 
 {
-	int index = 0;
-	char *tok;
-	while (*str != delim && *str != '\0') {
-		index++;
-		str++;
-	}	
-	tok = (char *) malloc((index + 1 ) * sizeof(char));
-	*(tok + index) = '\0';
-	for (index = index - 1; index >= 0; index--) {
-		*(tok + index) = *str--;
+	int i;
+	for (i = 0; i < n; i++) {
+		dst[i] = src[i]; 
 	}
-	return tok;
+	if (dst[i-1] == '\0') return 1;
+	return 0;
+}
+
+char *str_ptr;
+
+char *strtok(char *str,const char *delimiters) 
+{
+	int i;
+	int len = strlen(delimiters);
+	
+	/* check delimiters */
+	if (len == 0) return NULL;
+
+	/* check str not empty */
+	if (!str && !str_ptr) return NULL;
+	
+	/* first call of strtok */
+	if (str && !str_ptr) str_ptr = str;
+	
+	/* get start position */
+	char *start;
+	start = str_ptr;
+	
+	/* we don't want delimiters, skip it */
+	while (1) {
+		for (i = 0; i < len; i++) {
+			if (*start == delimiters[i]) {
+				start++;
+				break;
+			}
+		}
+		/* check we find the start position */
+		if (i == len) {
+			str_ptr = start;
+			break;
+		}
+	}
+
+	/* reach the end of the string */
+	if (*str_ptr == '\0') return NULL;
+
+	/* find the end of the string */
+	while (1) {
+		for (i = 0; i < len; i++) {
+			if (*str_ptr == delimiters[i]) {
+				/* replace delim with null */
+				*str_ptr = '\0';
+				break;
+			}
+		}
+		if(i == len) str++;
+		break;
+	}
+	return start;
 }

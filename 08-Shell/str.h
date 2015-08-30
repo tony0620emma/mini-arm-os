@@ -4,6 +4,7 @@
 int strncmp(const char * , const char * , size_t);
 int strcmp(const char *, const char *);
 int strlen(const char *);
-char *strtok(const char *, char);
+int strncpy(char *, char *, size_t);
+char *strtok(char *,const char *);
 
 #endif

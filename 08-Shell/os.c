@@ -68,15 +68,16 @@ void clear_buffer(char *buffer, size_t index)
 		buffer[i] = '\0';
 }
 
-void command_detect (const char *str, size_t index)
+void command_detect (char *str, size_t index)
 {
-	// --- need to fix strtok later ----
-	/*char *tok = strtok(str, ' ');
+	char cmd[index];
+	strncpy(str, cmd, index);	
+	char *tok = strtok(cmd, " ");
 	print_str("token : ");
 	print_str(tok);
-	print_char("\n");*/
+	print_char("\n");
 
-	if (!strncmp("help", str, index))
+	if (!strcmp("help", tok))
 		print_str("This is a help command\n");
 	else if (!strncmp("fibonacci", str, index)) {
 		print_str("Calculating fibonacci sequence ...\n");
