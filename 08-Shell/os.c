@@ -15,6 +15,8 @@
 /* when RXNE is set, data can be read */
 #define USART_FLAG_RXNE ((uint16_t) 0x0020)
 
+int fibonacci(int number1);
+
 void usart_init(void)
 {
 	*(RCC_APB2ENR) |= (uint32_t) (0x00000001 | 0x00000004);
@@ -62,14 +64,27 @@ char recv_char(void)
 void clear_buffer(char *buffer, size_t index)
 {
 	int i;
-	for(i = index - 1; i >= 0; i--)
+	for(i = index; i >= 0; i--)
 		buffer[i] = '\0';
 }
 
 void command_detect (const char *str, size_t index)
 {
-	if (!strncmp("help", str, 4))
+	// --- need to fix strtok later ----
+	/*char *tok = strtok(str, ' ');
+	print_str("token : ");
+	print_str(tok);
+	print_char("\n");*/
+
+	if (!strncmp("help", str, index))
 		print_str("This is a help command\n");
+	else if (!strncmp("fibonacci", str, index)) {
+		print_str("Calculating fibonacci sequence ...\n");
+		if (thread_create_int(fibonacci, 15) == -1)
+			print_str("Failed to create fib thread...QQ\n");
+		else
+			print_str("Create fibonacci sequence successfully!!\n");
+	}
 }
 
 void shell(void *user)
@@ -79,18 +94,18 @@ void shell(void *user)
 	while (1) {
 		print_str("tonyyanxuan:~$ ");
 		index = 0;
-
 		while (1) {
-
 			buffer[index] = recv_char();
 
 			/* detect "enter" hit or a new line character */
 			if (buffer[index] == 13 || buffer[index] == '\n') {
 				print_char("\n");
-				index += 1;
+				buffer[index] = '\0';
 				command_detect(&buffer[0], index);
 				break;
-			} else if (buffer[index] == 8 || buffer[index] == 127) {
+			} 
+			/* detect backspace or delete */
+			else if (buffer[index] == 8 || buffer[index] == 127) {
 				print_char("\b");
 				print_char(" ");
 				print_char("\b");
@@ -99,17 +114,14 @@ void shell(void *user)
 				print_char(&buffer[index++]);
 			}
 
-
 			/* prevent index overflow */
 			if (index == MAX_INPUT)
 				index--;
 		}
-
 		 /* ---- debug ----
 		  * print_str("your input is : ");
 		  * print_str(&buffer[0]);
 		  * print_str("\n"); */
-		 
 		clear_buffer(buffer, index);
 	}
 }
@@ -154,4 +166,11 @@ int main(void)
 	thread_start();
 
 	return 0;
+}
+
+int fibonacci(int number) 
+{
+	if (number == 0) return 0;
+	if (number == 1) return 1;
+	return fibonacci(number - 1) + fibonacci(number - 2);
 }
