@@ -72,7 +72,13 @@ void command_detect (char *str, size_t index)
 {
 	char cmd[index];
 	strncpy(str, cmd, index);	
+	print_str("command : ");
+	print_str(cmd);
+	print_str("\n");
 	char *tok = strtok(cmd, " ");
+	print_str("command : ");
+	print_str(cmd);
+	print_str("\n");
 	print_str("token : ");
 	print_str(tok);
 	print_char("\n");
@@ -102,7 +108,7 @@ void shell(void *user)
 			if (buffer[index] == 13 || buffer[index] == '\n') {
 				print_char("\n");
 				buffer[index] = '\0';
-				command_detect(&buffer[0], index);
+				command_detect(buffer, index);
 				break;
 			} 
 			/* detect backspace or delete */
