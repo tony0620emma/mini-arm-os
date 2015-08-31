@@ -35,12 +35,14 @@ int strlen(const char *str)
 	return i;
 }
 
+/* copy n characters, and detect null at the end */
 int strncpy(char *src, char *dst, size_t n) 
 {
 	int i;
 	for (i = 0; i < n; i++) {
 		dst[i] = src[i]; 
 	}
+	/* return null at the end or not */
 	if (dst[i-1] == '\0') return 1;
 	return 0;
 }
@@ -92,8 +94,8 @@ char *strtok(char *str,const char *delimiters)
 				break;
 			}
 		}
-		if(i < len) break;
 		str_ptr++;
+		if(i < len) break;
 	}
 	return start;
 }

@@ -69,12 +69,17 @@ void clear_buffer(char *buffer, size_t index)
 		buffer[i] = '\0';
 }
 
-void command_detect (char *str, size_t index)
+void command_detect(char *str, size_t index)
 {
 	char *tok = strtok(str, " ");
 
-	if (strcmp("help", tok))
-		print_str("This is a help command\n");
+	if (strcmp("help", tok)){
+		tok = strtok(str, " ");
+		if (tok != NULL)
+			print_str("help only need one argument!\n");
+		else
+			print_str("This is a help command\n");
+	}
 	else if (strcmp("fibonacci", str)) {
 		print_str("Calculating fibonacci sequence ...\n");
 		if (thread_create_int(fibonacci, 15) == -1)
@@ -100,6 +105,7 @@ void shell(void *user)
 			if (buffer[index] == 13 || buffer[index] == '\n') {
 				print_char("\n");
 				buffer[index] = '\0';
+				/* detect if command exists */
 				command_detect(buffer, index);
 				break;
 			} 
@@ -109,9 +115,12 @@ void shell(void *user)
 					print_char("\b");
 					print_char(" ");
 					print_char("\b");
+					/* reach the end or not */
 					buffer[index--] = '\0';
 				}
-			} else  {
+			} 
+			/* print char and move to next position */
+			else  {
 				print_char(&buffer[index++]);
 			}
 
@@ -119,10 +128,6 @@ void shell(void *user)
 			if (index == MAX_INPUT)
 				index--;
 		}
-		 /* ---- debug ----
-		  * print_str("your input is : ");
-		  * print_str(&buffer[0]);
-		  * print_str("\n"); */
 		clear_buffer(buffer, index);
 	}
 }
