@@ -132,22 +132,6 @@ void shell(void *user)
 	}
 }
 
-
-/*static void delay(volatile int count)
-{
-	count *= 50000;
-	while (count--);
-}*/
-
-/*static void busy_loop(void *str)
-{
-	while (1) {
-		print_str(str);
-		print_str(": Running...\n");
-		delay(1000);
-	}
-}*/
-
 /* 72MHz */
 #define CPU_CLOCK_HZ 72000000
 
