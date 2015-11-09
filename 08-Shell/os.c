@@ -4,6 +4,7 @@
 #include "threads.h"
 #include "str.h"
 
+/* FIXME: bad idea of input limitation */
 #define MAX_INPUT 50
 
 /* USART TXE Flag
@@ -82,7 +83,7 @@ void command_detect(char *str, size_t index)
 	}
 	else if (strcmp("fibonacci", str)) {
 		print_str("Calculating fibonacci sequence ...\n");
-		if (thread_create_int(fibonacci, 15) == -1)
+		if (thread_create((void*) (fibonacci), (void*)(15)) == -1)
 			print_str("Failed to create fib thread...QQ\n");
 		else
 			print_str("Create fibonacci sequence successfully!!\n");

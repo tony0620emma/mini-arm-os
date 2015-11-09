@@ -110,45 +110,6 @@ int thread_create(void (*run)(void *), void *userdata)
 	return threadId;
 }
 
-int thread_create_int(int (*run)(int), int number)
-{
-	/* Find a free thing */
-	int threadId = 0;
-	uint32_t *stack;
-
-	for (threadId = 0; threadId < MAX_TASKS; threadId++) {
-		if (tasks[threadId].in_use == 0)
-			break;
-	}
-
-	if (threadId == MAX_TASKS)
-		return -1;
-
-	/* Create the stack */
-	stack = (uint32_t *) malloc(STACK_SIZE * sizeof(uint32_t));
-	tasks[threadId].orig_stack = stack;
-	if (stack == 0)
-		return -1;
-
-	stack += STACK_SIZE - 32; /* End of stack, minus what we are about to push */
-	if (first) {
-		stack[8]  = (unsigned int) run;
-		stack[9]  = (unsigned int) number;
-		first = 0;
-	} else {
-		stack[8]  = (unsigned int) THREAD_PSP;
-		stack[9]  = (unsigned int) number;
-		stack[14] = (unsigned) &thread_self_terminal;
-		stack[15] = (unsigned int) run;
-		stack[16] = (unsigned int) 0x21000000; /* PSR Thumb bit */
-	}
-
-	/* Construct the control block */
-	tasks[threadId].stack = stack;
-	tasks[threadId].in_use = 1;
-
-	return threadId;
-}
 void thread_kill(int thread_id)
 {
 	tasks[thread_id].in_use = 0;
