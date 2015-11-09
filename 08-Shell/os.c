@@ -3,6 +3,8 @@
 #include "reg.h"
 #include "threads.h"
 #include "str.h"
+#include "type.h"
+#include "malloc.h"
 
 /* FIXME: bad idea of input limitation */
 #define MAX_INPUT 50
@@ -16,7 +18,7 @@
 /* when RXNE is set, data can be read */
 #define USART_FLAG_RXNE ((uint16_t) 0x0020)
 
-int fibonacci(int number1);
+void fibonacci(int);
 extern char *str_ptr;
 
 void usart_init(void)
@@ -159,9 +161,17 @@ int main(void)
 	return 0;
 }
 
-int fibonacci(int number) 
+int fib_content(int number)
 {
 	if (number == 0) return 0;
 	if (number == 1) return 1;
-	return fibonacci(number - 1) + fibonacci(number - 2);
+	return fib_content(number - 1) + fib_content(number - 2);
+}
+
+void fibonacci(int number) 
+{
+	char *str = malloc(20);
+	itoa(number, str);
+	print_str(str);
+	free(str);
 }
